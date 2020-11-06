@@ -24,6 +24,9 @@
                 i.e. every day, except Saturdays and Sundays, and the following days: New Year's Day
                 (1 January), Good Friday, Easter Monday, Labour Day (1 May), Christmas (25 and 26 December).
             </p>
+            <form method="post" action="/update" style="text-align: center">
+                <button type="submit">Update Currencies</button>
+            </form>
             <table class="currencies-table">
                 <thead>
                     <tr>
@@ -35,10 +38,10 @@
                 <tbody>
                     <tr>
                         <td>
-                            <?php echo $currency['name']; ?>
+                            <?php echo $currency->getSymbol(); ?>
                         </td>
                         <td>
-                            <?php echo $currency['rate']; ?>
+                            <?php echo $currency->getPrice(); ?>
                         </td>
                     </tr>
                 </tbody>

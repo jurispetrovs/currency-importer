@@ -4,22 +4,30 @@ namespace App\Models;
 
 class Currency
 {
-    private string $name;
-    private string $rate;
+    private string $symbol;
+    private string $price;
 
-    public function __construct(string $name, string $rate)
+    public function __construct(string $symbol, string $price)
     {
-        $this->name = $name;
-        $this->rate = $rate;
+        $this->symbol = $symbol;
+        $this->price = $price;
     }
 
-    public function getName(): string
+    public function getSymbol(): string
     {
-        return $this->name;
+        return $this->symbol;
     }
 
-    public function getRate(): string
+    public function getPrice(): string
     {
-        return $this->rate;
+        return $this->price;
+    }
+
+    public static function create(array $data): self
+    {
+        return new self(
+            $data['symbol'],
+            $data['price']
+        );
     }
 }

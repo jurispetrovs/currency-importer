@@ -8,42 +8,64 @@ class CurrencyRepository
 {
     public function getAll(): array
     {
+        $data = query()
+            ->select('*')
+            ->from('currencies')
+            ->orderBy('symbol', 'ASC')
+            ->execute()
+            ->fetchAllAssociative();
+
+        $currencies = [];
+
+        foreach ($data as $currency) {
+            $currencies[] = Currency::create($currency);
+        }
+
+        return $currencies;
+    }
+
+    public function save(Currency $currency): void
+    {
+        $symbol = $this->getBySymbol($currency);
+
+        if ($symbol) {
+            $this->update($currency);
+        } else {
+            $this->insert($currency);
+        }
+    }
+
+    private function getBySymbol(Currency $currency)
+    {
         return query()
             ->select('*')
             ->from('currencies')
-            ->orderBy('name', 'ASC')
-            ->execute()
-            ->fetchAllAssociative();
-    }
-
-    public function getByName(string $name)
-    {
-        return query()->select('*')
-            ->from('currencies')
-            ->where('name = :name')
-            ->setParameter('name', $name)
+            ->where('symbol = :symbol')
+            ->setParameter('symbol', $currency->getSymbol())
             ->execute()
             ->fetchAssociative();
     }
 
-    public function insert(Currency $currency): void
+    private function insert(Currency $currency): void
     {
-        query()->insert('currencies')
+        query()
+            ->insert('currencies')
             ->values([
-                'name' => '?',
-                'rate' => '?'
+                'symbol' => '?',
+                'price' => '?'
             ])
-            ->setParameter(0, $currency->getName())
-            ->setParameter(1, $currency->getRate())
+            ->setParameter(0, $currency->getSymbol())
+            ->setParameter(1, $currency->getPrice())
             ->execute();
     }
 
-    public function update(Currency $currency): void
+    private function update(Currency $currency): void
     {
-        query()->update('currencies')
-            ->set('currencies.rate', $currency->getRate())
-            ->where('name = :name')
-            ->setParameter('name', $currency->getName())
+        query()
+            ->update('currencies')
+            ->set('currencies.price', $currency->getPrice())
+            ->where('symbol = :symbol')
+            ->setParameter('symbol', $currency->getSymbol())
             ->execute();
     }
 }
