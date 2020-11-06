@@ -31,7 +31,6 @@ class CurrencyRepository
         if ($symbol) {
             $this->update($currency);
         } else {
-            echo 2;
             $this->insert($currency);
         }
     }
